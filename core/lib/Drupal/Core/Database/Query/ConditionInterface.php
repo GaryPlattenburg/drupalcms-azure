@@ -31,7 +31,7 @@ interface ConditionInterface {
    * to tell the database that case insensitive equivalence is desired:
    * @code
    * db_select('users')
-   *  ->condition('name', db_like($name), 'LIKE')
+   *  ->condition('name', $injected_connection->escapeLike($name), 'LIKE')
    * @endcode
    * Use 'LIKE BINARY' instead of 'LIKE' for case sensitive queries.
    *
@@ -133,6 +133,13 @@ interface ConditionInterface {
   public function notExists(SelectInterface $select);
 
   /**
+   * Sets a condition that is always false.
+   *
+   * @return $this
+   */
+  public function alwaysFalse();
+
+  /**
    * Gets the, possibly nested, list of conditions in this conditional clause.
    *
    * This method returns by reference. That allows alter hooks to access the
@@ -197,7 +204,7 @@ interface ConditionInterface {
    *
    * @param $conjunction
    *   - AND (default): this is the equivalent of andConditionGroup().
-   *   - OR: this is the equivalent of andConditionGroup().
+   *   - OR: this is the equivalent of orConditionGroup().
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   An object holding a group of conditions.
